@@ -19,9 +19,6 @@ def quitar(self):
     # Botón para quitar el producto
     tk.Button(ventana_quitar, text="Quitar Producto", command=lambda: quitar_producto(producto_a_quitar_var.get())).pack()
 
-from tkinter import messagebox
-import sqlite3
-
 def obtener_opciones_base_datos():
     try:
         # Conectar a la base de datos (o crearla si no existe)
@@ -41,7 +38,7 @@ def obtener_opciones_base_datos():
         return []
 
 # Ejemplo de uso:
-opciones_disponibles = obtener_opciones_base_datos()
+#opciones_disponibles = obtener_opciones_base_datos()
 
 
 def quitar_producto(producto_a_quitar_var):

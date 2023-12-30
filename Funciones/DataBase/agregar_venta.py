@@ -8,29 +8,6 @@ def agregar_venta(self):
     toplevel = tk.Toplevel(self.root)
     toplevel.title("Agregar Venta")
 
-    # Barra de menú
-    menu_bar = tk.Menu(toplevel)
-    toplevel.config(menu=menu_bar)
-
-        # Menú "Archivo"
-    archivo_menu = tk.Menu(menu_bar, tearoff=0)
-    menu_bar.add_cascade(label="Archivo", menu=archivo_menu)
-    archivo_menu.add_command(label="Actualizar", command=self.actualizar)
-    archivo_menu.add_command(label="Salir", command=toplevel.quit)
-
-        # Menú "Productos"
-    productos_menu = tk.Menu(menu_bar, tearoff=0)
-    menu_bar.add_cascade(label="Productos", menu=productos_menu)
-    productos_menu.add_command(label="Agregar Producto", command=self.agregar_producto)
-    productos_menu.add_command(label="Quitar Producto", command=self.quitar_producto)
-
-        # Menú "Ajustes"
-    Ajustes_menu = tk.Menu(menu_bar, tearoff=0)
-    menu_bar.add_cascade(label="Ajustes", menu=Ajustes_menu)
-    Ajustes_menu.add_command(label="Crear Base de Datos", command=self.agregar_base_de_datos)
-    Ajustes_menu.add_command(label="Quitar Producto", command=toplevel.quit)
-
-
      # Etiqueta y entrada para el monto de la venta
     label_producto = tk.Label(toplevel, text="Selecciona el producto:")
     label_producto.grid(row=0, column=0, padx=10, pady=10)
@@ -121,6 +98,5 @@ def actualizar_stock_en_bd(producto, stock):
         conn.close()
     except Exception as e:
         messagebox.showerror("Error", f"Error al actualizar el stock en la base de datos: {str(e)}")
-
 
 

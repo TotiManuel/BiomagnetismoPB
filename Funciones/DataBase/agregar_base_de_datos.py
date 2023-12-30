@@ -1,12 +1,11 @@
 import sqlite3
+from tkinter import messagebox
 import os.path as path
 
 def agregar_database():
-    if path.exists("base_datos_biomagnetismo.db"):
-        messagebox.showerror("EXISTE", "Base de datos ya existe.")
-    else:
-    # Conectar a la base de datos (o crearla si no existe)
-        conn = sqlite3.connect('../../base_datos_biomagnetismo.db')
+    if path.exists("base_datos_biomagnetismo.db") != True:
+        # Conectar a la base de datos (o crearla si no existe)
+        conn = sqlite3.connect('base_datos_biomagnetismo.db')
     # Crear un cursor para interactuar con la base de datos
         cursor = conn.cursor()
     # Crear una tabla en la base de datos
@@ -27,3 +26,6 @@ def agregar_database():
     # Guardar los cambios y cerrar la conexión
         conn.commit()
         conn.close()
+    else:
+        messagebox.showerror("EXISTE", "Base de datos ya existe.")
+

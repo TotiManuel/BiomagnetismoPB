@@ -24,7 +24,7 @@ def agregar_producto_funcion():
             if not producto_existe(nombre_producto):
                 conn = sqlite3.connect('base_datos_biomagnetismo.db')
                 cursor = conn.cursor()
-                cursor.execute('INSERT INTO Productos (bool, producto, valor, stock, ventas, reembolsos, talle) VALUES (?,?, ?, ?, ?, ?)',
+                cursor.execute('INSERT INTO Productos (bool, producto, valor, stock, ventas, reembolsos, talle) VALUES (?,?, ?, ?, ?, ?, ?)',
                                (1, nombre_producto, precio_producto, stock_producto,0,0, talle))
                 conn.commit()
                 conn.close()
