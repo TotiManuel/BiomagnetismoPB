@@ -1,15 +1,15 @@
 import tkinter as tk
 from tkinter import messagebox
-import sqlite3
+#import sqlite3
 from Funciones.DataBase import agregar_base_de_datos
-from Funciones import quitar_producto
-from Funciones.DataBase import agregar_venta
-from Funciones.DataBase import reembolso
-from Funciones.DataBase import mostrar_grafico
-from Funciones.DataBase import agregar_producto
-from Funciones.DataBase import opciones_base_de_datos
-from Funciones import actualizar_opciones
-from Funciones.DataBase import ver_stock
+#from Funciones import quitar_producto
+#from Funciones.DataBase import agregar_venta
+#from Funciones.DataBase import reembolso
+#from Funciones.DataBase import mostrar_grafico
+#from Funciones.DataBase import agregar_producto
+#from Funciones.DataBase import opciones_base_de_datos
+#from Funciones import actualizar_opciones
+#from Funciones.DataBase import ver_stock
 class RegistroVentas:
     def __init__(self, root):
         self.root = root
@@ -38,7 +38,7 @@ class RegistroVentas:
         # Menú "Ajustes"
         Ajustes_menu = tk.Menu(menu_bar, tearoff=0)
         menu_bar.add_cascade(label="Ajustes", menu=Ajustes_menu)
-        Ajustes_menu.add_command(label="Crear Base de Datos", command=self.prueba)
+        Ajustes_menu.add_command(label="Crear Base de Datos", command=self.database)
 
         # Etiqueta y entrada para el monto de la venta
         self.label_producto = tk.Label(root, text="Bienvenida!! ")
@@ -59,37 +59,10 @@ class RegistroVentas:
         self.boton_mostrar_grafico = tk.Button(root, text="Ver Stock", command=self.prueba)
         self.boton_mostrar_grafico.place(x=10, y=130)
 
-    def actualizar(self):
-        actualizar_opciones.actualizar_opciones(self)
-
-    def agregar_venta(self): # Funcion
-        agregar_venta.agregar_venta(self)
-        
-    def realizar_reembolso(self): # Funcion
-        reembolso.reembolso(self)
-
-    def mostrar_grafico(self): # Funcion
-        mostrar_grafico.graficar(self)
-    
-    def ver_stock(self):
-            ver_stock.lista(self)
-
-    def agregar_producto(self): # Funcion
-        agregar_producto.agregar_producto(self)
-
-    def quitar_producto(self): # Funcion
-        quitar_producto.quitar(self)
-
-    def obtener_opciones_desde_bd(self): # Funcion
-        productos = opciones_base_de_datos.obtener_opciones()
-        return productos
-
-    def agregar_base_de_datos(self): # Funcion
-        if path.exists("base_datos_biomagnetismo.db"):
-            messagebox.showerror("EXISTE", "Base de datos ya existe.")
-        else:
-            agregar_base_de_datos.agregar_database()
-            messagebox.showerror("EXITO", "Base de datos creada con exito.")
+#    def actualizar(self):
+#        actualizar_opciones.actualizar_opciones(self)
+    def database(self):
+        agregar_base_de_datos.agregar_datebase(self)
     def prueba(self):
         print("Prueba")
 if __name__ == "__main__":
