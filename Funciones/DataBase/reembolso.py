@@ -45,7 +45,7 @@ def realizar_reembolso(cantidad, producto_seleccionado):
 
         if cantidad == cantidad:
             # Realizar la venta aquí (actualizar la base de datos, etc.)
-            actualizar_stock_en_bd(producto_seleccionado, stock_actual + cantidad)
+            actualizar_stock_en_bd(producto_seleccionado, stock_actual + cantidad, cantidad)
             messagebox.showinfo("Éxito", "reembolso realizado con éxito.")
             toplevel.destroy()
         else:
@@ -65,7 +65,7 @@ def obtener_stock_desde_bd(producto):
         messagebox.showerror("Error", f"Error al obtener el stock desde la base de datos: {str(e)}")
         return 0
 
-def actualizar_stock_en_bd(producto, stock):
+def actualizar_stock_en_bd(producto, stock, cantidad):
     try:
         conn = sqlite3.connect('base_datos_biomagnetismo.db')
         cursor = conn.cursor()
@@ -76,7 +76,7 @@ def actualizar_stock_en_bd(producto, stock):
 
         if resultado_reembolsos:
             reembolsos_actuales = resultado_reembolsos[0]
-            nuevos_reembolsos = reembolsos_actuales + 1  # Sumar 1 a las ventas actuales
+            nuevos_reembolsos = reembolsos_actuales + cantidad  # Sumar 1 a las ventas actuales
 
             # Actualizar las ventas en la base de datos
             cursor.execute('UPDATE Productos SET reembolsos = ? WHERE producto = ?', (nuevos_reembolsos, producto))

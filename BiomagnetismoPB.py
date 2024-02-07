@@ -12,7 +12,7 @@ class RegistroVentas:
     def __init__(self, root):
         self.root = root
         self.root.title("Registro de Ventas")
-        self.root.geometry("500x500")
+        self.root.geometry("500x500+0+0")
 
         self.ventas = []
         self.reembolsos = []
