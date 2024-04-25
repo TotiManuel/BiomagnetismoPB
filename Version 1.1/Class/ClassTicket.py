@@ -9,7 +9,7 @@ class Ticket:
 		self.TicketNumber = TicketNumber
 	def SeeTicket(self):
 		pass
-	def PrintTicket
+	def PrintTicket():
 		pass
 def main():
 	pass

@@ -1,36 +1,92 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
-from Class import ClassDataBase
+from tkinter import ttk
+from Class import ClassProducts
 
-def AddDataBase():
-	DataBase = ClassDataBase.DataBase()
-	DataBase.CreateDataBase()
+def buscar_productos():
+	Products_All = []
+	devolver = []
+	with open ("./Version 1.1\Productos.txt") as products:
+		productsTupla = products.readlines()
+		for i in productsTupla:
+			linea = i.strip().split(",")
+			if linea[0] != "PRODUCTO":
+				crearproduct = ClassProducts.Products(NameProduct=linea[0], ValueProduct=linea[1], Size=linea[2], Stock=linea[3])
+				Products_All.append(crearproduct)
+		for i in Products_All:
+			devolver.append(i.NameProduct)
+	return devolver
+def buscar_precio_productos(producto):
+	valor = int(spinbox_Amount.get())
+	with open ("./Version 1.1\Productos.txt") as products:
+		productsTupla = products.readlines()
+		for i in productsTupla:
+			linea = i.strip().split(",")
+			if linea[0] != "PRODUCTO":
+				if linea[0] == producto:
+					price = float(linea[1])*valor
+					return price
+def validar_input(*args):
+	ProductExact = buscar_productos()
+	for i in ProductExact:
+		valor = float(spinbox_Amount.get())
+		if i == combobox_product.get() and valor > 0:
+			thePrice = buscar_precio_productos(i)
+			entry_price.config(state="normal")
+			entry_price.delete(0, tk.END)
+			entry_price.insert(tk.END, "$" + str(thePrice))
+			entry_price.config(state="readonly")
 
 def AddSell():
+	global combobox_product
+	global ProductExact
+	global entry_price
+	global spinbox_Amount
 	rootSell = tk.Tk()
 	rootSell.title("Registro de Ventas")
 	rootSell.geometry("800x600+0+0")
 	label_products = tk.Label(rootSell, text="Producto:")
-	label_products.place(relx=0.1, rely=0.1)
+	label_products.place(relx=0.01, rely=0.1)
+	ProductExact = buscar_productos()
+	combobox_product = ttk.Combobox(rootSell, values=ProductExact)
+	combobox_product.place(relx=0.09, rely=0.1)
+	combobox_product.set(ProductExact[0])
+	combobox_product.bind("<<ComboboxSelected>>", validar_input)
 	label_amount = tk.Label(rootSell, text="Cantidad:")
-	label_amount.place(relx=0.3, rely=0.1)
+	label_amount.place(relx=0.01, rely=0.15)
+	spinbox_Amount = tk.Spinbox(rootSell, from_=1, to=100)
+	spinbox_Amount.place(relx=0.09, rely=0.15)
+	spinbox_Amount.bind("<<SpinboxSelected>>", buscar_precio_productos)
 	label_price = tk.Label(rootSell, text="Precio:")
-	label_price.place(relx=0.5, rely=0.1)
+	label_price.place(relx=0.01, rely=0.20)
+	entry_price = tk.Entry(rootSell)
+	entry_price.config(state="readonly")
+	entry_price.place(relx=0.09 , rely=0.20, relwidth=0.17)
 	label_client = tk.Label(rootSell, text="Cliente:")
-	label_client.place(relx=0.7, rely=0.1)
+	label_client.place(relx=0.01, rely=0.25)
 	rootSell.mainloop()
 def AddRefund():
 	rootRefund = tk.Tk()
-	rootRefund.title("Registro de Reembolsos")
+	rootRefund.title("Registro de Ventas")
 	rootRefund.geometry("800x600+0+0")
 	label_products = tk.Label(rootRefund, text="Producto:")
-	label_products.place(relx=0.1, rely=0.1)
+	label_products.place(relx=0.01, rely=0.1)
+	ProductExact = buscar_productos()
+	combobox_product = ttk.Combobox(rootRefund, values=ProductExact)
+	combobox_product.place(relx=0.09, rely=0.1)
+	combobox_product.set(ProductExact[0])
+	combobox_product.bind("<<ComboboxSelected>>", validar_input)
 	label_amount = tk.Label(rootRefund, text="Cantidad:")
-	label_amount.place(relx=0.3, rely=0.1)
+	label_amount.place(relx=0.01, rely=0.15)
+	spinbox_Amount = tk.Spinbox(rootRefund, from_=1, to=100)
+	spinbox_Amount.place(relx=0.09, rely=0.15)
+	spinbox_Amount.bind("<<SpinboxSelected>>", buscar_precio_productos)
 	label_price = tk.Label(rootRefund, text="Precio:")
-	label_price.place(relx=0.5, rely=0.1)
+	label_price.place(relx=0.01, rely=0.20)
+	entry_price = tk.Entry(rootRefund)
+	entry_price.config(state="readonly")
+	entry_price.place(relx=0.09 , rely=0.20, relwidth=0.17)
 	label_client = tk.Label(rootRefund, text="Cliente:")
-	label_client.place(relx=0.7, rely=0.1)
+	label_client.place(relx=0.01, rely=0.25)
 	rootRefund.mainloop()
 def ViewStock():
 	rootViewStock = tk.Tk()
@@ -55,9 +111,7 @@ def AddStock():
 	label_price.place(relx=0.1, rely=0.5)
 	label_client = tk.Label(rootAddProduct, text="Cliente:")
 	label_client.place(relx=0.1, rely=0.7)
-	products_list = ClassDataBase.DataBase()
-	productslisted = products_list.GetAllOptions()
-	combobox_product = ttk.Combobox(rootAddProduct, values=productslisted)
+	combobox_product = ttk.Combobox(rootAddProduct, values="productslisted")
 	combobox_product.place(relx=0.1, rely=0.2)
 	spinbox_Amount = tk.Spinbox(rootAddProduct, from_=0, to=100)
 	spinbox_Amount.place(relx=0.1, rely=0.4)
@@ -101,13 +155,13 @@ def main():
 	# Menú "Archivo"
 	archivo_menu = tk.Menu(menu_bar, tearoff=0)
 	menu_bar.add_cascade(label="Archivo", menu=archivo_menu)
-	archivo_menu.add_command(label="Actualizar", command=prueba)
+	archivo_menu.add_command(label="Probar", command=validar_input)
 	archivo_menu.add_command(label="Salir", command=root.destroy)
 
 	# Menú "Ajustes"
 	Ajustes_menu = tk.Menu(menu_bar, tearoff=0)
 	menu_bar.add_cascade(label="Ajustes", menu=Ajustes_menu)
-	Ajustes_menu.add_command(label="Crear Base de Datos", command=AddDataBase)
+	Ajustes_menu.add_command(label="Crear Base de Datos", command=prueba)
 	
 	# Etiqueta y entrada para el monto de la venta
 	label_producto = tk.Label(root, text="BIENVENIDA!! ")

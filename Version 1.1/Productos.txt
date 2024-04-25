@@ -1,0 +1,10 @@
+PRODUCTO, PRECIO, TALLA, STOCK
+Camiseta,15.99, M, 50
+Pantalon,29.99, L, 30
+Zapatos,49.99, 42, 20
+Bufanda,9.99, Única, 100
+Gorra,12.50, Única, 80
+Vestido,39.99, S, 25
+Calcetines,6.99, M, 60
+Chaqueta,59.99, XL, 15
+Pantalones-cortos,19.99, L, 40
