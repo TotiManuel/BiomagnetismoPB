@@ -4,11 +4,11 @@ def cargaDatos():
     totalProductos = CargaDatos.main()
     return totalProductos
 def venta(datosCargados):
-    venta = Venta.main(datosCargados, "Gorra", 12.50, "U")
+    venta = Venta.main(datosCargados)
 def reembolso(datosCargados):
-    reembolso = Reembolso.main(datosCargados, "Gorra", 12.50, "U")
+    reembolso = Reembolso.main(datosCargados)
 def agregarProducto(datosCargados):
-    productoagregado = AgregarProducto.main(datosCargados, "Banda", 11.00, "M", 7)
+    productoagregado = AgregarProducto.main(datosCargados)
 def main():
     datosCargados = cargaDatos()
     root = tk.Tk()
@@ -24,6 +24,15 @@ def main():
     barraMenu.add_cascade(label="Archivo", menu = menuArchivo)
     
     root.config(menu=barraMenu)
+
+    botonVenta = tk.Button(text="Agregar Venta", command=lambda: venta(datosCargados))
+    botonVenta.pack()
+
+    botonReembolso = tk.Button(text="Agregar Reembolso", command=lambda: reembolso(datosCargados))
+    botonReembolso.pack()
+
+    botonAgregarProducto = tk.Button(text="Agregar Producto", command=lambda: agregarProducto(datosCargados))
+    botonAgregarProducto.pack()
 
     root.mainloop()
     
