@@ -4,7 +4,8 @@ class Products:
 		self.ValueProduct = ValueProduct
 		self.Size = Size
 		self.Stock = Stock
-		self.state = True
+		self.vendido = 0
+		self.reembolso = 0
 	def Sell(self, amount, paymentMethod):
 		self.Stock = self.Stock - amount
 		print(f"Pago: {self.ValueProduct * amount} a traves de {paymentMethod}")
