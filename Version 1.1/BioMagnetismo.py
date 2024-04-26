@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
-from Class import ClassSell, ClassRefund
+from Class import Sell, Refund
 
 def AddSell():
-	ClassSell.main()
+	Sell.main()
 def AddRefund():
-	ClassRefund.main()
+	Refund.main()
 def ViewStock():
 	rootViewStock = tk.Tk()
 	rootViewStock.title("Registro de Stock")
