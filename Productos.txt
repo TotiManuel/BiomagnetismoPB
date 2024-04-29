@@ -1,10 +1,10 @@
 PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO
-Camiseta,15.99,M, 50, 0, 0
-Pantalon,29.99,L, 30, 0, 0
-Zapatos,49.99,42, 20, 0, 0
-Bufanda,9.99,U, 1, 0, 0
-Gorra,12.50,U, 0, 0, 0
-Vestido,39.99,S, 0, 0, 0
-Calcetines,6.99,M, 0, 0, 0
-Chaqueta,59.99,XL, 0, 0, 0
-Pantalones-cortos,19.99,L, 0, 0, 0
+Camiseta,15.99,M,50,0,0
+Pantalon,29.99,L,30,0,0
+Zapatos,49.99,42,20,0,0
+Bufanda,9.99,U,1,0,0
+Gorra,12.50,U,0,0,0
+Vestido,39.99,S,0,0,0
+Calcetines,6.99,M,0,0,0
+Chaqueta,59.99,XL,0,0,0
+Pantalones-cortos,19.99,L,0,0,0

@@ -45,6 +45,15 @@ def actualizar_reembolso(*args):
     entryTalla_reembolso.config(state="readonly")
     entryPrecio_reembolso.config(state="readonly")
 
+def guardarNuevosProductos():
+    Clase = Producto("NuevoProducto", 15.00, "J", 5, 0, 0)
+    datosCargados.append(Clase)
+    with open("Productos.txt", "w") as newProduct:
+        newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
+        for i in datosCargados:
+            newProduct.write("\n" + str(i.getProducto()) + "," + str(i.getPrecio()) + "," + str(i.getTalla()) + "," + str(i.getStock()) + "," + str(i.getVendido()) + "," + str(i.getReembolso()))
+    messagebox.showinfo("Guardado", "Producto Guardado")
+
 def buscarNombres():
     nombres = []
     for i in datosCargados:
@@ -100,14 +109,11 @@ def main():
     menuArchivo = tk.Menu(barraMenu, tearoff=0)
     menuTurnero = tk.Menu(barraMenu, tearoff=0)
 
-    menuArchivo.add_command(label="Probar Venta", command=lambda: venta())
-    menuArchivo.add_command(label="Probar Reembolso", command=lambda: reembolso())
-    menuArchivo.add_command(label="Probar Agregar Producto", command=lambda: agregarProducto())
+    menuArchivo.add_command(label="Guardar", command=lambda: guardarNuevosProductos())
     barraMenu.add_cascade(label="Archivo", menu = menuArchivo)
 
-    menuTurnero.add_command(label="Buscar Paciente", command=lambda: venta())
-    menuTurnero.add_command(label="Turnero", command=lambda: reembolso())
-    menuTurnero.add_command(label="Sin Programar", command=lambda: agregarProducto())
+    menuTurnero.add_command(label="Buscar Paciente", command=lambda: quit())
+    menuTurnero.add_command(label="Turnero", command=lambda: quit())
     barraMenu.add_cascade(label="Turnero", menu = menuTurnero)
     
     root.config(menu=barraMenu)

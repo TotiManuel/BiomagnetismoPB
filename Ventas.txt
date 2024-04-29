@@ -33,3 +33,12 @@ Stock: 49
 Ventas: 2
 Reembolsados: 1
 ----------
+----------
+El producto fue vendido con exito
+Producto: Camiseta
+Talla: M
+Precio: $15.99
+Stock: 99
+Ventas: 1
+Reembolsados: 0
+----------
