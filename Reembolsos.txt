@@ -26,3 +26,12 @@ Stock: 50
 Ventas: 1
 Reembolsados: 1
 ----------
+----------
+El producto fue vendido con exito
+Producto: Bufanda
+Talla: U
+Precio: $9.99
+Stock: 103
+Ventas: 0
+Reembolsados: 3
+----------

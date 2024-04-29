@@ -1,8 +1,11 @@
-from Funciones import AgregarProducto
+#region Programa
+#region Importaciones
 from Class.ClassProducto import Producto
 import tkinter as tk
 from tkinter import ttk, messagebox
+#endregion
 
+#region Funciones
 def cargaDatos():
     with open ("Productos.txt") as Productos:
         totalProductos = []
@@ -45,6 +48,15 @@ def actualizar_reembolso(*args):
 def buscarNombres():
     nombres = []
     for i in datosCargados:
+        if int(i.getStock()) > 0:
+            nombres.append(i.getProducto())
+        else:
+            pass
+    return(nombres)
+
+def buscarNombresStock():
+    nombres = []
+    for i in datosCargados:
         nombres.append(i.getProducto())
     return(nombres)
 
@@ -68,12 +80,14 @@ def reembolso(nombrepedido, tallapedido, cantidadpedido, preciopedido):
     with open("Reembolsos.txt", "+a") as venta:
         venta.write(mensaje)
 
-def agregarProducto():
-    productoagregado = AgregarProducto.main(datosCargados)
+def agregarProducto(nombrepedido, cantidadpedido):
+    for i in datosCargados:
+        if i.getProducto() == nombrepedido:
+            i.setStock(cantidadpedido)
+            messagebox.showinfo("Producto Agregado", "El producto fue agregado con exito\nProducto: " + i.getProducto() + "\nStock: " + str(i.getStock()))
+#endregion
 
-def prueba():
-    pass
-
+#region Main
 def main():
     #region principal
     global datosCargados, entryTalla_venta, comboboxProducto_venta, entryPrecio_venta, SpinboxCantidad_venta
@@ -205,9 +219,37 @@ def main():
     botonVender_reembolso.pack()
     #endregion
 
+    #region AgregarStock
+    frameProducto_Stock = ttk.Frame(tab5)
+    frameProducto_Stock.pack(anchor="w", pady=5)
+
+    frameCantidad_Stock = ttk.Frame(tab5)
+    frameCantidad_Stock.pack(anchor="w", pady=5)
+
+    labelProducto_Stock = tk.Label(frameProducto_Stock, text="Producto: ")
+    labelProducto_Stock.pack(side="left")
+
+    labelCantidad_Stock = tk.Label(frameCantidad_Stock, text="Cantidad: ")
+    labelCantidad_Stock.pack(side="left")
+
+    comboboxProducto_Stock = ttk.Combobox(frameProducto_Stock, values=buscarNombresStock(), state="readonly")
+    comboboxProducto_Stock.set("Productos")
+    comboboxProducto_Stock.bind("<<ComboboxSelected>>")
+    comboboxProducto_Stock.pack(side="right")
+
+    SpinboxCantidad_Stock = tk.Spinbox(frameCantidad_Stock, from_=1, to=100, state="readonly")
+    SpinboxCantidad_Stock.bind("<<FocusOut>>")
+    SpinboxCantidad_Stock.pack(side="right")
+
+    botonAgregarStock = tk.Button(tab5, text="Agregar", command= lambda: agregarProducto(comboboxProducto_Stock.get(), SpinboxCantidad_Stock.get()))
+    botonAgregarStock.pack()
+    #endregion
+
     notebook.pack(expand=True, fill='both')
 
     root.mainloop()
-    
+#endregion    
+
 if __name__ == "__main__":
     main()
+#endregion

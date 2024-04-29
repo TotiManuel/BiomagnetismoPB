@@ -21,7 +21,7 @@ class Producto:
     def getStock(self):
         return self.STOCK
     def setStock(self, newStock):
-        self.STOCK = newStock
+        self.STOCK = self.STOCK + int(newStock)
     def getVendido(self):
         return self.VENDIDO
     def setVendido(self, cantidad):
