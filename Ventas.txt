@@ -1,0 +1,43 @@
+Ventas: 
+--------------------
+Producto: Camiseta
+Talla: M
+Precio: $15.99
+Stock: 39
+Ventas: 0
+--------------------
+--------------------
+Producto: Camiseta
+Talla: M
+Precio: $15.99
+Stock: 39
+Ventas: 0
+--------------------
+--------------------
+Producto: Camiseta
+Talla: M
+Precio: $47.97$47.97$47.97
+Stock: 37
+Ventas: 0
+--------------------
+--------------------
+Producto: Camiseta
+Talla: M
+Precio: $47.97$47.97$47.97
+Stock: 37
+Ventas: 0
+--------------------
+--------------------
+Producto: Camiseta
+Talla: M
+Precio: 399.75
+Stock: 35
+Ventas: 0
+--------------------
+--------------------
+Producto: Camiseta
+Talla: M
+Precio: 399.75
+Stock: 35
+Ventas: 0
+--------------------

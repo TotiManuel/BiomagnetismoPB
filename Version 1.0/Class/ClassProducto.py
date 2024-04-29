@@ -19,14 +19,14 @@ class Producto:
     def setTalla(self, newTalla):
         self.TALLA = newTalla
     def getStock(self):
-        self.STOCK
+        return self.STOCK
     def setStock(self, newStock):
         self.STOCK = newStock
     def getVendido(self):
         return self.VENDIDO
     def setVendido(self, cantidad):
         self.VENDIDO = self.VENDIDO + cantidad
-        self.STOCK = self.STOCK - cantidad
+        self.setStock(self.STOCK - cantidad)
     def setReembolso(self, cantidad):
         self.REEMBOLSO = self.REEMBOLSO + cantidad
         self.STOCK = self.STOCK + cantidad
