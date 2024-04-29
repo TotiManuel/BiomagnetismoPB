@@ -1,35 +1,28 @@
-Ventas: 
+Reembolsos: 
 ----------
 El producto fue vendido con exito
 Producto: Bufanda
 Talla: U
 Precio: $29.97
-Stock: 97
+Stock: 100
 Ventas: 3
+Reembolsados: 3
 ----------
 ----------
 El producto fue vendido con exito
 Producto: Camiseta
 Talla: M
 Precio: $15.99
-Stock: 49
+Stock: 50
 Ventas: 1
+Reembolsados: 1
 ----------
 ----------
 El producto fue vendido con exito
 Producto: Camiseta
 Talla: M
 Precio: $15.99
-Stock: 49
+Stock: 50
 Ventas: 1
-Reembolsados: 0
-----------
-----------
-El producto fue vendido con exito
-Producto: Camiseta
-Talla: M
-Precio: $15.99
-Stock: 49
-Ventas: 2
 Reembolsados: 1
 ----------

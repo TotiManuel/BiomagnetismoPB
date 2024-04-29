@@ -10,23 +10,37 @@ def cargaDatos():
         for i in productoTupla:
             producto = i.strip().split(",")
             if producto[0].lower() != "producto":
-                agregarProducto = Producto(producto[0], producto[1], producto[2], producto[3])
+                agregarProducto = Producto(producto[0], producto[1], producto[2], producto[3], producto[4], producto[5])
                 totalProductos.append(agregarProducto)
     return totalProductos
 
-def actualizar(*args):
+def actualizar_venta(*args):
     for i in datosCargados:
-        if comboboxProducto.get() == i.getProducto():
+        if comboboxProducto_venta.get() == i.getProducto():
             talla = i.getTalla()
-            precio = float(i.getPrecio()) * float(SpinboxCantidad.get())
-    entryTalla.config(state="normal")
-    entryPrecio.config(state="normal")
-    entryTalla.delete(0, tk.END)
-    entryTalla.insert(tk.END, talla)
-    entryPrecio.delete(0, tk.END)
-    entryPrecio.insert(tk.END, "$" + str(precio))
-    entryTalla.config(state="readonly")
-    entryPrecio.config(state="readonly")
+            precio = float(i.getPrecio()) * float(SpinboxCantidad_venta.get())
+    entryTalla_venta.config(state="normal")
+    entryPrecio_venta.config(state="normal")
+    entryTalla_venta.delete(0, tk.END)
+    entryTalla_venta.insert(tk.END, talla)
+    entryPrecio_venta.delete(0, tk.END)
+    entryPrecio_venta.insert(tk.END, "$" + str(precio))
+    entryTalla_venta.config(state="readonly")
+    entryPrecio_venta.config(state="readonly")
+
+def actualizar_reembolso(*args):
+    for i in datosCargados:
+        if comboboxProducto_reembolso.get() == i.getProducto():
+            talla = i.getTalla()
+            precio = float(i.getPrecio()) * float(SpinboxCantidad_reembolso.get())
+    entryTalla_reembolso.config(state="normal")
+    entryPrecio_reembolso.config(state="normal")
+    entryTalla_reembolso.delete(0, tk.END)
+    entryTalla_reembolso.insert(tk.END, talla)
+    entryPrecio_reembolso.delete(0, tk.END)
+    entryPrecio_reembolso.insert(tk.END, "$" + str(precio))
+    entryTalla_reembolso.config(state="readonly")
+    entryPrecio_reembolso.config(state="readonly")
 
 def buscarNombres():
     nombres = []
@@ -39,29 +53,31 @@ def venta(nombrepedido, tallapedido, cantidadpedido, preciopedido):
         if i.getProducto() == nombrepedido:
             if i.getTalla() == tallapedido:
                 i.setVendido(int(cantidadpedido))
-                messagebox.showinfo("Producto Vendido", "El producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()))
-    stockactual = i.getStock() - int(cantidadpedido)
-    precioactual = float(preciopedido[1::])*float(cantidadpedido)
+                messagebox.showinfo("Producto Vendido", "El producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()))
+                mensaje = "\n----------\nEl producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + str(preciopedido) + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()) + "\n----------"
     with open("Ventas.txt", "+a") as venta:
-        venta.write("\n--------------------\nProducto: " + nombrepedido + "\nTalla: " + tallapedido + "\nPrecio: " + str(precioactual) + "\nStock: " + str(stockactual) + "\nVentas: " + str(i.getVendido()) + "\n--------------------")
+        venta.write(mensaje)
 
-def reembolso():
-    pass
-    #for i in datosCargados:
-    #    if i[0] == nombrepedido:
-    #        if float(i[1]) == float(preciopedido):
-    #            if i[2] == tallapedido:
-    #                productocreado = Producto(i[0], i[1], i[2], i[3])
-    #                productocreado.setReembolso(1)
-    #                print("Producto Reembolsado")
-    #return(productocreado)
+def reembolso(nombrepedido, tallapedido, cantidadpedido, preciopedido):
+    for i in datosCargados:
+        if i.getProducto() == nombrepedido:
+            if i.getTalla() == tallapedido:
+                i.setReembolso(int(cantidadpedido))
+                messagebox.showinfo("Producto Reembolsado", "El producto fue reembolsado con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()))
+                mensaje = "\n----------\nEl producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + str(preciopedido) + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()) +"\n----------"
+    with open("Reembolsos.txt", "+a") as venta:
+        venta.write(mensaje)
 
 def agregarProducto():
     productoagregado = AgregarProducto.main(datosCargados)
 
+def prueba():
+    pass
+
 def main():
     #region principal
-    global datosCargados, entryTalla, comboboxProducto, entryPrecio, SpinboxCantidad
+    global datosCargados, entryTalla_venta, comboboxProducto_venta, entryPrecio_venta, SpinboxCantidad_venta
+    global entryTalla_reembolso, comboboxProducto_reembolso, entryPrecio_reembolso, SpinboxCantidad_reembolso
     datosCargados = cargaDatos()
     root = tk.Tk()
     root.title("BioMagnetismo")
@@ -98,95 +114,95 @@ def main():
     #endregion
 
     #region Ventas
-    frameProducto = ttk.Frame(tab2)
-    frameProducto.pack(anchor="w", pady=5)
+    frameProducto_venta = ttk.Frame(tab2)
+    frameProducto_venta.pack(anchor="w", pady=5)
 
-    frameTalla = ttk.Frame(tab2)
-    frameTalla.pack(anchor="w", pady=5)
+    frameTalla_venta = ttk.Frame(tab2)
+    frameTalla_venta.pack(anchor="w", pady=5)
 
-    frameCantidad = ttk.Frame(tab2)
-    frameCantidad.pack(anchor="w", pady=5)
+    frameCantidad_venta = ttk.Frame(tab2)
+    frameCantidad_venta.pack(anchor="w", pady=5)
 
-    framePrecio = ttk.Frame(tab2)
-    framePrecio.pack(anchor="w", pady=5)
+    framePrecio_venta = ttk.Frame(tab2)
+    framePrecio_venta.pack(anchor="w", pady=5)
 
-    labelProducto = tk.Label(frameProducto, text="Producto: ")
-    labelProducto.pack(side="left")
+    labelProducto_venta = tk.Label(frameProducto_venta, text="Producto: ")
+    labelProducto_venta.pack(side="left")
 
-    labelTalla = tk.Label(frameTalla, text="Talla: ")
-    labelTalla.pack(side="left")
+    labelTalla_venta = tk.Label(frameTalla_venta, text="Talla: ")
+    labelTalla_venta.pack(side="left")
 
-    labelCantidad = tk.Label(frameCantidad, text="Cantidad: ")
-    labelCantidad.pack(side="left")
+    labelCantidad_venta = tk.Label(frameCantidad_venta, text="Cantidad: ")
+    labelCantidad_venta.pack(side="left")
 
-    labelPrecio = tk.Label(framePrecio, text="Precio: ")
-    labelPrecio.pack(side="left")
+    labelPrecio_venta = tk.Label(framePrecio_venta, text="Precio: ")
+    labelPrecio_venta.pack(side="left")
 
-    entryTalla = tk.Entry(frameTalla)
-    entryTalla.insert(tk.END, "Talle")
-    entryTalla.config(state="readonly")
-    entryTalla.pack(side="right")
+    entryTalla_venta = tk.Entry(frameTalla_venta)
+    entryTalla_venta.insert(tk.END, "Talle")
+    entryTalla_venta.config(state="readonly")
+    entryTalla_venta.pack(side="right")
 
-    comboboxProducto = ttk.Combobox(frameProducto, values=buscarNombres(), state="readonly")
-    comboboxProducto.set("Productos")
-    comboboxProducto.bind("<<ComboboxSelected>>", actualizar)
-    comboboxProducto.pack(side="right")
+    comboboxProducto_venta = ttk.Combobox(frameProducto_venta, values=buscarNombres(), state="readonly")
+    comboboxProducto_venta.set("Productos")
+    comboboxProducto_venta.bind("<<ComboboxSelected>>", actualizar_venta)
+    comboboxProducto_venta.pack(side="right")
 
-    SpinboxCantidad = tk.Spinbox(frameCantidad, from_=1, to=100, state="readonly")
-    SpinboxCantidad.bind("<<FocusOut>>", actualizar)
-    SpinboxCantidad.pack(side="right")
+    SpinboxCantidad_venta = tk.Spinbox(frameCantidad_venta, from_=1, to=100, state="readonly")
+    SpinboxCantidad_venta.bind("<<FocusOut>>", actualizar_venta)
+    SpinboxCantidad_venta.pack(side="right")
 
-    entryPrecio = tk.Entry(framePrecio, state="readonly")
-    entryPrecio.pack(side="right")
+    entryPrecio_venta = tk.Entry(framePrecio_venta, state="readonly")
+    entryPrecio_venta.pack(side="right")
 
-    botonVender = tk.Button(tab2, text="Vender", command= lambda: venta(comboboxProducto.get(), entryTalla.get(), SpinboxCantidad.get(), entryPrecio.get()))
-    botonVender.pack()
+    botonVender_venta = tk.Button(tab2, text="Vender", command= lambda: venta(comboboxProducto_venta.get(), entryTalla_venta.get(), SpinboxCantidad_venta.get(), entryPrecio_venta.get()))
+    botonVender_venta.pack()
     #endregion
 
     #region Reembolsos
-    frameProducto = ttk.Frame(tab3)
-    frameProducto.pack(anchor="w", pady=5)
+    frameProducto_reembolso = ttk.Frame(tab3)
+    frameProducto_reembolso.pack(anchor="w", pady=5)
 
-    frameTalla = ttk.Frame(tab3)
-    frameTalla.pack(anchor="w", pady=5)
+    frameTalla_reembolso = ttk.Frame(tab3)
+    frameTalla_reembolso.pack(anchor="w", pady=5)
 
-    frameCantidad = ttk.Frame(tab3)
-    frameCantidad.pack(anchor="w", pady=5)
+    frameCantidad_reembolso = ttk.Frame(tab3)
+    frameCantidad_reembolso.pack(anchor="w", pady=5)
 
-    framePrecio = ttk.Frame(tab3)
-    framePrecio.pack(anchor="w", pady=5)
+    framePrecio_reembolso = ttk.Frame(tab3)
+    framePrecio_reembolso.pack(anchor="w", pady=5)
 
-    labelProducto = tk.Label(frameProducto, text="Producto: ")
-    labelProducto.pack(side="left")
+    labelProducto_reembolso = tk.Label(frameProducto_reembolso, text="Producto: ")
+    labelProducto_reembolso.pack(side="left")
 
-    labelTalla = tk.Label(frameTalla, text="Talla: ")
-    labelTalla.pack(side="left")
+    labelTalla_reembolso = tk.Label(frameTalla_reembolso, text="Talla: ")
+    labelTalla_reembolso.pack(side="left")
 
-    labelCantidad = tk.Label(frameCantidad, text="Cantidad: ")
-    labelCantidad.pack(side="left")
+    labelCantidad_reembolso = tk.Label(frameCantidad_reembolso, text="Cantidad: ")
+    labelCantidad_reembolso.pack(side="left")
 
-    labelPrecio = tk.Label(framePrecio, text="Precio: ")
-    labelPrecio.pack(side="left")
+    labelPrecio_reembolso = tk.Label(framePrecio_reembolso, text="Precio: ")
+    labelPrecio_reembolso.pack(side="left")
 
-    entryTalla = tk.Entry(frameTalla)
-    entryTalla.insert(tk.END, "Talle")
-    entryTalla.config(state="readonly")
-    entryTalla.pack(side="right")
+    entryTalla_reembolso = tk.Entry(frameTalla_reembolso)
+    entryTalla_reembolso.insert(tk.END, "Talle")
+    entryTalla_reembolso.config(state="readonly")
+    entryTalla_reembolso.pack(side="right")
 
-    comboboxProducto = ttk.Combobox(frameProducto, values=buscarNombres(), state="readonly")
-    comboboxProducto.set("Productos")
-    comboboxProducto.bind("<<ComboboxSelected>>", actualizar)
-    comboboxProducto.pack(side="right")
+    comboboxProducto_reembolso = ttk.Combobox(frameProducto_reembolso, values=buscarNombres(), state="readonly")
+    comboboxProducto_reembolso.set("Productos")
+    comboboxProducto_reembolso.bind("<<ComboboxSelected>>", actualizar_reembolso)
+    comboboxProducto_reembolso.pack(side="right")
 
-    SpinboxCantidad = tk.Spinbox(frameCantidad, from_=1, to=100, state="readonly")
-    SpinboxCantidad.bind("<<FocusOut>>", actualizar)
-    SpinboxCantidad.pack(side="right")
+    SpinboxCantidad_reembolso = tk.Spinbox(frameCantidad_reembolso, from_=1, to=100, state="readonly")
+    SpinboxCantidad_reembolso.bind("<<FocusOut>>", actualizar_reembolso)
+    SpinboxCantidad_reembolso.pack(side="right")
 
-    entryPrecio = tk.Entry(framePrecio, state="readonly")
-    entryPrecio.pack(side="right")
+    entryPrecio_reembolso = tk.Entry(framePrecio_reembolso, state="readonly")
+    entryPrecio_reembolso.pack(side="right")
 
-    botonVender = tk.Button(tab3, text="Reembolsar", command= lambda: reembolso(comboboxProducto.get(), entryTalla.get(), SpinboxCantidad.get(), entryPrecio.get()))
-    botonVender.pack()
+    botonVender_reembolso = tk.Button(tab3, text="Reembolsar", command= lambda: reembolso(comboboxProducto_reembolso.get(), entryTalla_reembolso.get(), SpinboxCantidad_reembolso.get(), entryPrecio_reembolso.get()))
+    botonVender_reembolso.pack()
     #endregion
 
     notebook.pack(expand=True, fill='both')

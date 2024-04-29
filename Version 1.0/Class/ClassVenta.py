@@ -1,11 +1,11 @@
-class Producto:
-    def __init__(self, PRODUCTO, PRECIO, TALLA, STOCK, VENDIDO, REEMBOLSO):
+class Venta:
+    def __init__(self, PRODUCTO, PRECIO, TALLA, STOCK):
         self.PRODUCTO = PRODUCTO
         self.PRECIO = PRECIO
         self.TALLA = TALLA
         self.STOCK = int(STOCK)
-        self.VENDIDO = int(VENDIDO)
-        self.REEMBOLSO = int(REEMBOLSO)
+        self.VENDIDO = 0
+        self.REEMBOLSO = 0
     def getProducto(self):
         return self.PRODUCTO
     def setProducto(self, newName):
@@ -30,10 +30,6 @@ class Producto:
     def setReembolso(self, cantidad):
         self.REEMBOLSO = self.REEMBOLSO + cantidad
         self.STOCK = self.STOCK + cantidad
-    def getReembolso(self):
-        return self.REEMBOLSO
-    def __str__(self):
-        print("Clase Producto")
 def main():
     pass
 if __name__=="__main__":
