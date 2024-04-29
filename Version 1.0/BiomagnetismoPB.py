@@ -3,6 +3,8 @@
 from Class.ClassProducto import Producto
 import tkinter as tk
 from tkinter import ttk, messagebox
+import random
+from tkinter import PhotoImage
 #endregion
 
 #region Funciones
@@ -16,6 +18,9 @@ def cargaDatos():
                 agregarProducto = Producto(producto[0], producto[1], producto[2], producto[3], producto[4], producto[5])
                 totalProductos.append(agregarProducto)
     return totalProductos
+
+def actualizar_pasaje():
+    pass
 
 def actualizar_venta(*args):
     for i in datosCargados:
@@ -45,8 +50,8 @@ def actualizar_reembolso(*args):
     entryTalla_reembolso.config(state="readonly")
     entryPrecio_reembolso.config(state="readonly")
 
-def guardarNuevosProductos():
-    Clase = Producto("NuevoProducto", 15.00, "J", 5, 0, 0)
+def guardarNuevosProductos(nombre, precio, talla, stock, vendido, reembolsado):
+    Clase = Producto(nombre, precio, talla, stock, vendido, reembolsado)
     datosCargados.append(Clase)
     with open("Productos.txt", "w") as newProduct:
         newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
@@ -94,6 +99,17 @@ def agregarProducto(nombrepedido, cantidadpedido):
         if i.getProducto() == nombrepedido:
             i.setStock(cantidadpedido)
             messagebox.showinfo("Producto Agregado", "El producto fue agregado con exito\nProducto: " + i.getProducto() + "\nStock: " + str(i.getStock()))
+
+def protocoloDeCierre():
+    pregunta = messagebox.askyesno("Estas segura?", "Estas segura que deseas cerrar el programa?")
+    if pregunta:
+        with open("Productos.txt", "w") as newProduct:
+            newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
+            for i in datosCargados:
+                newProduct.write("\n" + str(i.getProducto()) + "," + str(i.getPrecio()) + "," + str(i.getTalla()) + "," + str(i.getStock()) + "," + str(i.getVendido()) + "," + str(i.getReembolso()))
+        quit()
+    else:
+        messagebox.showinfo("Sigamos Entonces", "De acuerdo, sigamos trabajando")
 #endregion
 
 #region Main
@@ -104,6 +120,7 @@ def main():
     datosCargados = cargaDatos()
     root = tk.Tk()
     root.title("BioMagnetismo")
+    root.protocol("WM_DELETE_WINDOW", protocoloDeCierre)
 
     barraMenu = tk.Menu(root)
     menuArchivo = tk.Menu(barraMenu, tearoff=0)
@@ -131,6 +148,21 @@ def main():
     notebook.add(tab3, text="Reembolso")
     notebook.add(tab4, text="Agregar Producto")
     notebook.add(tab5, text="Agregar Stock")
+
+    imagen = PhotoImage(file="logo.png").subsample(2, 2)
+    label_imagen = tk.Label(tab1, image=imagen)
+    label_imagen.pack()
+    #endregion
+
+    #region Bienvenido
+    mensajes = ["Yo y Jehova siempre creimos en ustedes!", "Hoy es un dia perfecto para ser feliz!", "Si tuviste un mal dia, recordá que Jesus soportó cosas peores!"]
+    pasajeAleatorio = random.randint(0,1)
+
+    frameProducto_bienvenido = ttk.Frame(tab1)
+    frameProducto_bienvenido.pack(anchor="w", pady=5)
+
+    labelProducto_bienvenido = tk.Label(frameProducto_bienvenido, text=mensajes[pasajeAleatorio])
+    labelProducto_bienvenido.pack(side="left")
     #endregion
 
     #region Ventas
@@ -223,6 +255,48 @@ def main():
 
     botonVender_reembolso = tk.Button(tab3, text="Reembolsar", command= lambda: reembolso(comboboxProducto_reembolso.get(), entryTalla_reembolso.get(), SpinboxCantidad_reembolso.get(), entryPrecio_reembolso.get()))
     botonVender_reembolso.pack()
+    #endregion
+
+    #region Productos
+    frameProductoAgregar = ttk.Frame(tab4)
+    frameProductoAgregar.pack(anchor="w", pady=5)
+
+    frameTallaProductoAgregar = ttk.Frame(tab4)
+    frameTallaProductoAgregar.pack(anchor="w", pady=5)
+
+    frameCantidadProductoAgregar = ttk.Frame(tab4)
+    frameCantidadProductoAgregar.pack(anchor="w", pady=5)
+
+    framePrecioProductoAgregar = ttk.Frame(tab4)
+    framePrecioProductoAgregar.pack(anchor="w", pady=5)
+
+    labelProductoProductoAgregar = tk.Label(frameProductoAgregar, text="Producto: ")
+    labelProductoProductoAgregar.pack(side="left")
+
+    labelTallaProductoAgregar = tk.Label(frameTallaProductoAgregar, text="Talla: ")
+    labelTallaProductoAgregar.pack(side="left")
+
+    labelCantidadProductoAgregar = tk.Label(frameCantidadProductoAgregar, text="Cantidad: ")
+    labelCantidadProductoAgregar.pack(side="left")
+
+    labelPrecioProductoAgregar = tk.Label(framePrecioProductoAgregar, text="Precio: ")
+    labelPrecioProductoAgregar.pack(side="left")
+
+    entryTallaProductoAgregar = tk.Entry(frameTallaProductoAgregar)
+    entryTallaProductoAgregar.pack(side="right")
+
+    entryProductoAgregar = ttk.Entry(frameProductoAgregar, state="normal")
+    entryProductoAgregar.pack(side="right")
+
+    SpinboxCantidadProductoAgregar = tk.Spinbox(frameCantidadProductoAgregar, from_=1, to=100)
+    SpinboxCantidadProductoAgregar.bind("<<FocusOut>>", actualizar_reembolso)
+    SpinboxCantidadProductoAgregar.pack(side="right")
+
+    entryPrecioProductoAgregar = tk.Entry(framePrecioProductoAgregar)
+    entryPrecioProductoAgregar.pack(side="right")
+
+    botonVenderProductoAgregar = tk.Button(tab4, text="Agregar", command= lambda: guardarNuevosProductos(entryProductoAgregar.get(), entryPrecioProductoAgregar.get(), entryTallaProductoAgregar.get(), SpinboxCantidadProductoAgregar.get(), 0, 0))
+    botonVenderProductoAgregar.pack()                                                                     
     #endregion
 
     #region AgregarStock

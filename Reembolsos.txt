@@ -35,3 +35,12 @@ Stock: 103
 Ventas: 0
 Reembolsados: 3
 ----------
+----------
+El producto fue vendido con exito
+Producto: Julian
+Talla: M
+Precio: $10.5
+Stock: 20
+Ventas: 1
+Reembolsados: 1
+----------
