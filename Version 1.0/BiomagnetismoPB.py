@@ -130,7 +130,7 @@ def agregarProducto(nombrepedido, cantidadpedido):
             i.setStock(cantidadpedido)
             messagebox.showinfo("Producto Agregado", "El producto fue agregado con exito\nProducto: " + i.getProducto() + "\nStock: " + str(i.getStock()))
 
-def protocoloDeCierre(root):
+def protocoloDeCierre():
     pregunta = messagebox.askyesno("Estas segura?", "Estas segura que deseas cerrar el programa?")
     if pregunta:
         with open("Productos.txt", "w") as newProduct:
@@ -148,13 +148,14 @@ def protocoloDeCierre2():
             newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
             for i in datosCargados:
                 newProduct.write("\n" + str(i.getProducto()) + "," + str(i.getPrecio()) + "," + str(i.getTalla()) + "," + str(i.getStock()) + "," + str(i.getVendido()) + "," + str(i.getReembolso()))
-        quit()
+        root.quit()
     else:
         messagebox.showinfo("Sigamos Entonces", "De acuerdo, sigamos trabajando")
 #endregion
 
 #region Main
 def main():
+    global root
     #region principal
     global datosCargados, entryTalla_venta, comboboxProducto_venta, entryPrecio_venta, SpinboxCantidad_venta
     global entryTalla_reembolso, comboboxProducto_reembolso, entryPrecio_reembolso, SpinboxCantidad_reembolso
@@ -169,7 +170,7 @@ def main():
 
     menuArchivo.add_command(label="Guardar", command=lambda: faltaProgramar(), background="red")
     menuArchivo.add_separator()
-    menuArchivo.add_command(label="Salir", command=lambda: protocoloDeCierre(root))
+    menuArchivo.add_command(label="Salir", command=lambda: protocoloDeCierre())
     barraMenu.add_cascade(label="Archivo", menu = menuArchivo)
 
     menuTurnero.add_command(label="Buscar Paciente", command=lambda: faltaProgramar(), background="red")
@@ -192,7 +193,7 @@ def main():
     notebook.add(tab4, text="Agregar Producto")
     notebook.add(tab5, text="Agregar Stock")
 
-    imagen = PhotoImage(file="Version 1.0/logo.png").subsample(2, 2)
+    imagen = PhotoImage(file="logo.png").subsample(2, 2)
     label_imagen = tk.Label(tab1, image=imagen)
     label_imagen.pack()
     #endregion
