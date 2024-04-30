@@ -26,7 +26,7 @@ class Producto:
         return self.VENDIDO
     def setVendido(self, cantidad):
         self.VENDIDO = self.VENDIDO + cantidad
-        self.setStock(self.STOCK - cantidad)
+        self.STOCK = self.STOCK - cantidad
     def setReembolso(self, cantidad):
         self.REEMBOLSO = self.REEMBOLSO + cantidad
         self.STOCK = self.STOCK + cantidad

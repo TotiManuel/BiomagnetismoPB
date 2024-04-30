@@ -1,29 +1,14 @@
 #region Programa
 #region Importaciones
 from Class.ClassProducto import Producto
-from Turnero.Turnero import turnero
-from tkinter import ttk, messagebox
-from tkinter import PhotoImage
 import tkinter as tk
+from tkinter import ttk, messagebox
 import random
-import os
+from tkinter import PhotoImage
 #endregion
 
 #region Funciones
-def faltaProgramar():
-    messagebox.showwarning("Falta Programar", "Esta Caracteristica falta programar")
-
 def cargaDatos():
-    if not os.path.exists("Productos.txt"):
-        with open("Productos.txt", "+a") as archivo:
-            archivo.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO\nAnardirProducto, 10, AnadirTalla, 100, 0, 0")
-    if not os.path.exists("Reembolsos.txt"):
-        with open("Reembolsos.txt", "+a") as archivo:
-            archivo.write("Reembolsos: ")
-    if not os.path.exists("Ventas.txt"):
-        with open("Ventas.txt", "+a") as archivo:
-            archivo.write("Ventas: ")
-
     with open ("Productos.txt") as Productos:
         totalProductos = []
         productoTupla = Productos.readlines()
@@ -89,28 +74,13 @@ def buscarNombresStock():
         nombres.append(i.getProducto())
     return(nombres)
 
-def buscarTalla():
-    nombres = []
-    for i in datosCargados:
-        nombres.append(i.getTalla())
-    return(nombres)
-
-def buscarPrecio():
-    nombres = []
-    for i in datosCargados:
-        nombres.append(i.getPrecio())
-    return(nombres)
-
 def venta(nombrepedido, tallapedido, cantidadpedido, preciopedido):
     for i in datosCargados:
         if i.getProducto() == nombrepedido:
             if i.getTalla() == tallapedido:
-                if i.getStock() > 0:
-                    i.setVendido(int(cantidadpedido))
-                    messagebox.showinfo("Producto Vendido", "El producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()))
-                    mensaje = "\n----------\nEl producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + str(preciopedido) + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()) + "\n----------"
-                else:
-                    messagebox.showinfo("No Hay Stock", "No hay stock suficiente para generar esta venta\nPor favor agrega Stock y prueba nuevamente")
+                i.setVendido(int(cantidadpedido))
+                messagebox.showinfo("Producto Vendido", "El producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()))
+                mensaje = "\n----------\nEl producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + str(preciopedido) + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()) + "\n----------"
     with open("Ventas.txt", "+a") as venta:
         venta.write(mensaje)
 
@@ -130,18 +100,7 @@ def agregarProducto(nombrepedido, cantidadpedido):
             i.setStock(cantidadpedido)
             messagebox.showinfo("Producto Agregado", "El producto fue agregado con exito\nProducto: " + i.getProducto() + "\nStock: " + str(i.getStock()))
 
-def protocoloDeCierre(root):
-    pregunta = messagebox.askyesno("Estas segura?", "Estas segura que deseas cerrar el programa?")
-    if pregunta:
-        with open("Productos.txt", "w") as newProduct:
-            newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
-            for i in datosCargados:
-                newProduct.write("\n" + str(i.getProducto()) + "," + str(i.getPrecio()) + "," + str(i.getTalla()) + "," + str(i.getStock()) + "," + str(i.getVendido()) + "," + str(i.getReembolso()))
-        root.destroy()
-    else:
-        messagebox.showinfo("Sigamos Entonces", "De acuerdo, sigamos trabajando")
-
-def protocoloDeCierre2():
+def protocoloDeCierre():
     pregunta = messagebox.askyesno("Estas segura?", "Estas segura que deseas cerrar el programa?")
     if pregunta:
         with open("Productos.txt", "w") as newProduct:
@@ -152,28 +111,24 @@ def protocoloDeCierre2():
     else:
         messagebox.showinfo("Sigamos Entonces", "De acuerdo, sigamos trabajando")
 #endregion
-
-#region Main
-def main():
-    #region principal
+def turnero():
+        #region principal
     global datosCargados, entryTalla_venta, comboboxProducto_venta, entryPrecio_venta, SpinboxCantidad_venta
     global entryTalla_reembolso, comboboxProducto_reembolso, entryPrecio_reembolso, SpinboxCantidad_reembolso
     datosCargados = cargaDatos()
     root = tk.Tk()
     root.title("BioMagnetismo")
-    root.protocol("WM_DELETE_WINDOW", protocoloDeCierre2)
+    root.protocol("WM_DELETE_WINDOW", protocoloDeCierre)
 
     barraMenu = tk.Menu(root)
     menuArchivo = tk.Menu(barraMenu, tearoff=0)
     menuTurnero = tk.Menu(barraMenu, tearoff=0)
 
-    menuArchivo.add_command(label="Guardar", command=lambda: faltaProgramar(), background="red")
-    menuArchivo.add_separator()
-    menuArchivo.add_command(label="Salir", command=lambda: protocoloDeCierre(root))
+    menuArchivo.add_command(label="Guardar", command=lambda: guardarNuevosProductos())
     barraMenu.add_cascade(label="Archivo", menu = menuArchivo)
 
-    menuTurnero.add_command(label="Buscar Paciente", command=lambda: faltaProgramar(), background="red")
-    menuTurnero.add_command(label="Turnero", command=lambda: faltaProgramar(), background="red")
+    menuTurnero.add_command(label="Buscar Paciente", command=lambda: quit())
+    menuTurnero.add_command(label="Turnero", command=lambda: protocoloDeCierre())
     barraMenu.add_cascade(label="Turnero", menu = menuTurnero)
     
     root.config(menu=barraMenu)
@@ -192,7 +147,7 @@ def main():
     notebook.add(tab4, text="Agregar Producto")
     notebook.add(tab5, text="Agregar Stock")
 
-    imagen = PhotoImage(file="Version 1.0/logo.png").subsample(2, 2)
+    imagen = PhotoImage(file="logo.png").subsample(2, 2)
     label_imagen = tk.Label(tab1, image=imagen)
     label_imagen.pack()
     #endregion
@@ -234,15 +189,12 @@ def main():
     labelPrecio_venta.pack(side="left")
 
     entryTalla_venta = tk.Entry(frameTalla_venta)
-    entryTalla_venta.insert(tk.END, buscarTalla()[0])
+    entryTalla_venta.insert(tk.END, "Talle")
     entryTalla_venta.config(state="readonly")
     entryTalla_venta.pack(side="right")
 
     comboboxProducto_venta = ttk.Combobox(frameProducto_venta, values=buscarNombres(), state="readonly")
-    try:
-        comboboxProducto_venta.set(buscarNombres()[0])
-    except:
-        comboboxProducto_venta.set("No hay productos en stock")
+    comboboxProducto_venta.set("Productos")
     comboboxProducto_venta.bind("<<ComboboxSelected>>", actualizar_venta)
     comboboxProducto_venta.pack(side="right")
 
@@ -250,10 +202,7 @@ def main():
     SpinboxCantidad_venta.bind("<<FocusOut>>", actualizar_venta)
     SpinboxCantidad_venta.pack(side="right")
 
-    entryPrecio_venta = tk.Entry(framePrecio_venta)
-    precio = "$" + str(buscarPrecio()[0])
-    entryPrecio_venta.insert(tk.END, precio)
-    entryPrecio_venta.config(state="readonly")
+    entryPrecio_venta = tk.Entry(framePrecio_venta, state="readonly")
     entryPrecio_venta.pack(side="right")
 
     botonVender_venta = tk.Button(tab2, text="Vender", command= lambda: venta(comboboxProducto_venta.get(), entryTalla_venta.get(), SpinboxCantidad_venta.get(), entryPrecio_venta.get()))
@@ -286,12 +235,12 @@ def main():
     labelPrecio_reembolso.pack(side="left")
 
     entryTalla_reembolso = tk.Entry(frameTalla_reembolso)
-    entryTalla_reembolso.insert(tk.END, buscarTalla()[0])
+    entryTalla_reembolso.insert(tk.END, "Talle")
     entryTalla_reembolso.config(state="readonly")
     entryTalla_reembolso.pack(side="right")
 
     comboboxProducto_reembolso = ttk.Combobox(frameProducto_reembolso, values=buscarNombres(), state="readonly")
-    comboboxProducto_reembolso.set(buscarNombres()[0])
+    comboboxProducto_reembolso.set("Productos")
     comboboxProducto_reembolso.bind("<<ComboboxSelected>>", actualizar_reembolso)
     comboboxProducto_reembolso.pack(side="right")
 
@@ -299,10 +248,7 @@ def main():
     SpinboxCantidad_reembolso.bind("<<FocusOut>>", actualizar_reembolso)
     SpinboxCantidad_reembolso.pack(side="right")
 
-    entryPrecio_reembolso = tk.Entry(framePrecio_reembolso)
-    precio = "$" + str(buscarPrecio()[0])
-    entryPrecio_reembolso.insert(tk.END, precio)
-    entryPrecio_reembolso.config(state="readonly")
+    entryPrecio_reembolso = tk.Entry(framePrecio_reembolso, state="readonly")
     entryPrecio_reembolso.pack(side="right")
 
     botonVender_reembolso = tk.Button(tab3, text="Reembolsar", command= lambda: reembolso(comboboxProducto_reembolso.get(), entryTalla_reembolso.get(), SpinboxCantidad_reembolso.get(), entryPrecio_reembolso.get()))
@@ -380,7 +326,10 @@ def main():
     notebook.pack(expand=True, fill='both')
 
     root.mainloop()
-#endregion    
+#endregion
+#region Main
+def main():
+    turnero()    
 
 if __name__ == "__main__":
     main()

@@ -1,2 +1,2 @@
 PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO
-Julian,10.50,M,25,1,1
+AnardirProducto, 10, AnadirTalla,100,0,0
