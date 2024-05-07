@@ -1,134 +1,183 @@
 #region Programa
 #region Importaciones
-from Class.ClassProducto import Producto
 import tkinter as tk
+import os
 from tkinter import ttk, messagebox
-import random
-from tkinter import PhotoImage
+from datetime import datetime, date
 #endregion
 
 #region Funciones
-def cargaDatos():
-    with open ("Productos.txt") as Productos:
-        totalProductos = []
-        productoTupla = Productos.readlines()
-        for i in productoTupla:
-            producto = i.strip().split(",")
-            if producto[0].lower() != "producto":
-                agregarProducto = Producto(producto[0], producto[1], producto[2], producto[3], producto[4], producto[5])
-                totalProductos.append(agregarProducto)
-    return totalProductos
-
-def actualizar_pasaje():
+def faltaProgramar():
     pass
+def calcular_edad(fecha_nacimiento):
+    fecha_actual = datetime.now()
+    fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%d/%m/%Y")
+    edad = fecha_actual.year - fecha_nacimiento.year - ((fecha_actual.month, fecha_actual.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+    return edad
+def agregar_turno():
+    apellido = apellido_entry.get()
+    nombre = nombre_entry.get()
+    dni = dni_entry.get()
+    fecha_nacimiento = fecha_nacimiento_entry.get()
+    monto_consulta = monto_consulta_entry.get()
+    servicio = servicio_entry.get()
+    fecha_turno = fecha_turno_entry.get()
+    hora_turno = hora_turno_entry.get()
 
-def actualizar_venta(*args):
-    for i in datosCargados:
-        if comboboxProducto_venta.get() == i.getProducto():
-            talla = i.getTalla()
-            precio = float(i.getPrecio()) * float(SpinboxCantidad_venta.get())
-    entryTalla_venta.config(state="normal")
-    entryPrecio_venta.config(state="normal")
-    entryTalla_venta.delete(0, tk.END)
-    entryTalla_venta.insert(tk.END, talla)
-    entryPrecio_venta.delete(0, tk.END)
-    entryPrecio_venta.insert(tk.END, "$" + str(precio))
-    entryTalla_venta.config(state="readonly")
-    entryPrecio_venta.config(state="readonly")
+    edad = calcular_edad(fecha_nacimiento)
 
-def actualizar_reembolso(*args):
-    for i in datosCargados:
-        if comboboxProducto_reembolso.get() == i.getProducto():
-            talla = i.getTalla()
-            precio = float(i.getPrecio()) * float(SpinboxCantidad_reembolso.get())
-    entryTalla_reembolso.config(state="normal")
-    entryPrecio_reembolso.config(state="normal")
-    entryTalla_reembolso.delete(0, tk.END)
-    entryTalla_reembolso.insert(tk.END, talla)
-    entryPrecio_reembolso.delete(0, tk.END)
-    entryPrecio_reembolso.insert(tk.END, "$" + str(precio))
-    entryTalla_reembolso.config(state="readonly")
-    entryPrecio_reembolso.config(state="readonly")
+    # Comprobamos que todos los campos estén completos
+    if apellido == '' or nombre == '' or dni == '' or fecha_nacimiento == '' or monto_consulta == '' or servicio == '' or fecha_turno == '' or hora_turno == '':
+        messagebox.showerror("Error", "Por favor completa todos los campos.")
+        return
 
-def guardarNuevosProductos(nombre, precio, talla, stock, vendido, reembolsado):
-    Clase = Producto(nombre, precio, talla, stock, vendido, reembolsado)
-    datosCargados.append(Clase)
-    with open("Productos.txt", "w") as newProduct:
-        newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
-        for i in datosCargados:
-            newProduct.write("\n" + str(i.getProducto()) + "," + str(i.getPrecio()) + "," + str(i.getTalla()) + "," + str(i.getStock()) + "," + str(i.getVendido()) + "," + str(i.getReembolso()))
-    messagebox.showinfo("Guardado", "Producto Guardado")
+    # Abrir el archivo en modo de escritura
+    with open("turnos.txt", "a") as file:
+        # Escribir los datos del turno en el archivo
+        file.write(f"{apellido},{nombre},{dni},{fecha_nacimiento},{edad},{monto_consulta},{servicio},{fecha_turno},{hora_turno},No\n")
 
-def buscarNombres():
-    nombres = []
-    for i in datosCargados:
-        if int(i.getStock()) > 0:
-            nombres.append(i.getProducto())
-        else:
+    messagebox.showinfo("Éxito", "Turno agregado correctamente.")
+    apellido_entry.delete(0, tk.END)
+    nombre_entry.delete(0, tk.END)
+    dni_entry.delete(0, tk.END)
+    fecha_nacimiento_entry.delete(0, tk.END)
+    monto_consulta_entry.delete(0, tk.END)
+    servicio_entry.delete(0, tk.END)
+    fecha_turno_entry.delete(0, tk.END)
+    hora_turno_entry.delete(0, tk.END)
+    mostrar_turnos()
+    mostrar_turnos_all()
+def calcular_edad(fecha_nacimiento):
+    fecha_actual = datetime.now()
+    fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%d/%m/%Y")
+    edad = fecha_actual.year - fecha_nacimiento.year - ((fecha_actual.month, fecha_actual.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+    return edad
+def desmarcar_asistido(index):
+    with open("turnos.txt", "r") as file:
+        lines = file.readlines()
+
+    # Modificar la línea correspondiente para marcar el turno como asistido
+    lines[index] = lines[index].replace("Sí", "No")
+
+    # Escribir todas las líneas modificadas de vuelta al archivo
+    with open("turnos.txt", "w") as file:
+        file.writelines(lines)
+
+    # Actualizar la lista de turnos
+    mostrar_turnos()
+    mostrar_turnos_all()
+def marcar_asistido(index):
+    with open("turnos.txt", "r") as file:
+        lines = file.readlines()
+
+    # Modificar la línea correspondiente para marcar el turno como asistido
+    lines[index] = lines[index].replace("No", "Sí")
+
+    # Escribir todas las líneas modificadas de vuelta al archivo
+    with open("turnos.txt", "w") as file:
+        file.writelines(lines)
+
+    # Actualizar la lista de turnos
+    mostrar_turnos()
+    mostrar_turnos_all()
+def borrar_turno(index):
+    with open("turnos.txt", "r") as file:
+        lines = file.readlines()
+
+    # Eliminar la línea correspondiente al turno
+    del lines[index]
+
+    # Escribir todas las líneas actualizadas de vuelta al archivo
+    with open("turnos.txt", "w") as file:
+        file.writelines(lines)
+
+    # Actualizar la lista de turnos
+    mostrar_turnos()
+    mostrar_turnos_all()
+def mostrar_turnos_all():
+    # Limpiar la lista de turnos antes de volver a mostrarla
+    for widget in turnos_frame_all.winfo_children():
+        widget.destroy()
+
+    if not os.path.exists("turnos.txt"):
+        with open("turnos.txt","w") as file:
+            file.write("APELLIDO, NOMBRE, DNI, FECHA DE NACIMIENTO, EDAD, MONTOCONSULTA, SERVICIO, FECHA DEL TURNO, HORA DEL TURNO, ASISTIDO\n")
+
+    with open("turnos.txt", "r") as file:
+        turnos = file.readlines()
+
+    for i, turno in enumerate(turnos):
+        # Saltar la primera línea que contiene los encabezados
+        if i == 0:
+            continue
+        campos = turno.strip().split(",")
+        # Crear una cadena formateada para mostrar el turno
+        mensaje = f"Paciente: {campos[0]} {campos[1]} - {campos[2]} - {campos[4]} Años - ${campos[5]} - Servicio: {campos[6]} - {campos[7]} - {campos[8]} - Asistido: {campos[9]}\n" + "="*100
+        # Crear una etiqueta para mostrar el turno
+        turno_label = tk.Label(turnos_frame_all, text=mensaje, padx=10, pady=5)
+        turno_label.grid(row=i, column=0, sticky="w")
+        if campos[9] == "No":
             pass
-    return(nombres)
+        else:
+            turno_label.config(background="green")
+def mostrar_turnos():
+    # Limpiar la lista de turnos antes de volver a mostrarla
+    for widget in turnos_frame.winfo_children():
+        widget.destroy()
 
-def buscarNombresStock():
-    nombres = []
-    for i in datosCargados:
-        nombres.append(i.getProducto())
-    return(nombres)
+    if not os.path.exists("turnos.txt"):
+        with open("turnos.txt","w") as file:
+            file.write("APELLIDO, NOMBRE, DNI, FECHA DE NACIMIENTO, EDAD, MONTOCONSULTA, SERVICIO, FECHA DEL TURNO, HORA DEL TURNO, ASISTIDO\n")
 
-def venta(nombrepedido, tallapedido, cantidadpedido, preciopedido):
-    for i in datosCargados:
-        if i.getProducto() == nombrepedido:
-            if i.getTalla() == tallapedido:
-                i.setVendido(int(cantidadpedido))
-                messagebox.showinfo("Producto Vendido", "El producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()))
-                mensaje = "\n----------\nEl producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + str(preciopedido) + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()) + "\n----------"
-    with open("Ventas.txt", "+a") as venta:
-        venta.write(mensaje)
+    with open("turnos.txt", "r") as file:
+        turnos = file.readlines()
 
-def reembolso(nombrepedido, tallapedido, cantidadpedido, preciopedido):
-    for i in datosCargados:
-        if i.getProducto() == nombrepedido:
-            if i.getTalla() == tallapedido:
-                i.setReembolso(int(cantidadpedido))
-                messagebox.showinfo("Producto Reembolsado", "El producto fue reembolsado con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + preciopedido + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()))
-                mensaje = "\n----------\nEl producto fue vendido con exito\nProducto: " + i.getProducto() + "\nTalla: " + i.getTalla() + "\nPrecio: " + str(preciopedido) + "\nStock: " + str(i.getStock()) + "\nVentas: " + str(i.getVendido()) + "\nReembolsados: " + str(i.getReembolso()) +"\n----------"
-    with open("Reembolsos.txt", "+a") as venta:
-        venta.write(mensaje)
+    for i, turno in enumerate(turnos):
+        # Saltar la primera línea que contiene los encabezados
+        if i == 0:
+            continue
 
-def agregarProducto(nombrepedido, cantidadpedido):
-    for i in datosCargados:
-        if i.getProducto() == nombrepedido:
-            i.setStock(cantidadpedido)
-            messagebox.showinfo("Producto Agregado", "El producto fue agregado con exito\nProducto: " + i.getProducto() + "\nStock: " + str(i.getStock()))
+        # Dividir los campos del turno por las comas
+        campos = turno.strip().split(",")
+        fecha_actual = date.today()
 
-def protocoloDeCierre():
-    pregunta = messagebox.askyesno("Estas segura?", "Estas segura que deseas cerrar el programa?")
-    if pregunta:
-        with open("Productos.txt", "w") as newProduct:
-            newProduct.write("PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO")
-            for i in datosCargados:
-                newProduct.write("\n" + str(i.getProducto()) + "," + str(i.getPrecio()) + "," + str(i.getTalla()) + "," + str(i.getStock()) + "," + str(i.getVendido()) + "," + str(i.getReembolso()))
-        quit()
-    else:
-        messagebox.showinfo("Sigamos Entonces", "De acuerdo, sigamos trabajando")
+        if str(campos[7]) == fecha_actual.strftime("%d/%m/%Y"):
+            # Crear una cadena formateada para mostrar el turno
+            mensaje = f"Paciente: {campos[0]} {campos[1]} - {campos[2]} - {campos[4]} Años - ${campos[5]} - Servicio: {campos[6]} - {campos[7]} - {campos[8]} - Asistido: {campos[9]}"
+            # Crear una etiqueta para mostrar el turno
+            turno_label = tk.Label(turnos_frame, text=mensaje, padx=10, pady=5)
+            turno_label.grid(row=i, column=0, sticky="w")
+        else:
+            continue
+        # Si el turno no ha sido asistido, agregar un botón para marcarlo como asistido
+        if campos[9] == "No":
+            asistir_button = tk.Button(turnos_frame, text="Asistir", command=lambda i=i: marcar_asistido(i))
+            asistir_button.grid(row=i, column=1)
+            eliminar_button = tk.Button(turnos_frame, text="Eliminar", command=lambda i=i: borrar_turno(i))
+            eliminar_button.grid(row=i, column=2)
+        else:
+            turno_label.config(background="green")
+            cancelar_button = tk.Button(turnos_frame, text="Cancelar", command=lambda i=i: desmarcar_asistido(i))
+            cancelar_button.grid(row=i, column=1)
+
 #endregion
 def turnero():
-        #region principal
-    global datosCargados, entryTalla_venta, comboboxProducto_venta, entryPrecio_venta, SpinboxCantidad_venta
-    global entryTalla_reembolso, comboboxProducto_reembolso, entryPrecio_reembolso, SpinboxCantidad_reembolso
-    datosCargados = cargaDatos()
+    global apellido_entry, nombre_entry, dni_entry, fecha_nacimiento_entry, monto_consulta_entry, servicio_entry, fecha_turno_entry, hora_turno_entry, turnos_frame, turnos_frame_all
+    #region principal
     root = tk.Tk()
     root.title("BioMagnetismo")
-    root.protocol("WM_DELETE_WINDOW", protocoloDeCierre)
-
+    
     barraMenu = tk.Menu(root)
     menuArchivo = tk.Menu(barraMenu, tearoff=0)
     menuTurnero = tk.Menu(barraMenu, tearoff=0)
 
-    menuArchivo.add_command(label="Guardar", command=lambda: guardarNuevosProductos())
+    menuArchivo.add_command(label="Guardar", command=lambda: faltaProgramar(), background="red")
+    menuArchivo.add_separator()
+    menuArchivo.add_command(label="Salir", command=lambda: root.destroy())
     barraMenu.add_cascade(label="Archivo", menu = menuArchivo)
 
-    menuTurnero.add_command(label="Buscar Paciente", command=lambda: quit())
-    menuTurnero.add_command(label="Turnero", command=lambda: protocoloDeCierre())
+    menuTurnero.add_command(label="Buscar Paciente", command=lambda: faltaProgramar(), background="red")
+    menuTurnero.add_command(label="Turnero", command=lambda: faltaProgramar(), background="red")
     barraMenu.add_cascade(label="Turnero", menu = menuTurnero)
     
     root.config(menu=barraMenu)
@@ -141,186 +190,82 @@ def turnero():
     tab4 = ttk.Frame(notebook)
     tab5 = ttk.Frame(notebook)
 
-    notebook.add(tab1, text="Bienvenido")
-    notebook.add(tab2, text="Ventas")
-    notebook.add(tab3, text="Reembolso")
-    notebook.add(tab4, text="Agregar Producto")
+    notebook.add(tab1, text="Agregar Turno")
+    notebook.add(tab2, text="Turnos de Hoy")
+    notebook.add(tab3, text="Todos los turnos")
+    notebook.add(tab4, text="Modificar Turno")
     notebook.add(tab5, text="Agregar Stock")
 
-    imagen = PhotoImage(file="logo.png").subsample(2, 2)
-    label_imagen = tk.Label(tab1, image=imagen)
-    label_imagen.pack()
     #endregion
 
-    #region Bienvenido
-    mensajes = ["Yo y Jehova siempre creimos en ustedes!", "Hoy es un dia perfecto para ser feliz!", "Si tuviste un mal dia, recordá que Jesus soportó cosas peores!"]
-    pasajeAleatorio = random.randint(0,1)
+    #region Agregar Turno
+    # Crear los elementos de la interfaz
+    apellido_label = tk.Label(tab1, text="Apellido:")
+    apellido_label.grid(row=0, column=0, sticky="w")
+    apellido_entry = tk.Entry(tab1)
+    apellido_entry.grid(row=0, column=1)
 
-    frameProducto_bienvenido = ttk.Frame(tab1)
-    frameProducto_bienvenido.pack(anchor="w", pady=5)
+    nombre_label = tk.Label(tab1, text="Nombre:")
+    nombre_label.grid(row=1, column=0, sticky="w")
+    nombre_entry = tk.Entry(tab1)
+    nombre_entry.grid(row=1, column=1)
 
-    labelProducto_bienvenido = tk.Label(frameProducto_bienvenido, text=mensajes[pasajeAleatorio])
-    labelProducto_bienvenido.pack(side="left")
+    dni_label = tk.Label(tab1, text="DNI:")
+    dni_label.grid(row=2, column=0, sticky="w")
+    dni_entry = tk.Entry(tab1)
+    dni_entry.grid(row=2, column=1)
+
+    fecha_nacimiento_label = tk.Label(tab1, text="Fecha de Nacimiento (dd/mm/aaaa):")
+    fecha_nacimiento_label.grid(row=3, column=0, sticky="w")
+    fecha_nacimiento_entry = tk.Entry(tab1)
+    fecha_nacimiento_entry.grid(row=3, column=1)
+
+    monto_consulta_label = tk.Label(tab1, text="Monto de la Consulta:")
+    monto_consulta_label.grid(row=4, column=0, sticky="w")
+    monto_consulta_entry = tk.Entry(tab1)
+    monto_consulta_entry.grid(row=4, column=1)
+
+    servicio_label = tk.Label(tab1, text="Servicio en la Consulta:")
+    servicio_label.grid(row=5, column=0, sticky="w")
+    servicio_entry = tk.Entry(tab1)
+    servicio_entry.grid(row=5, column=1)
+
+    fecha_turno_label = tk.Label(tab1, text="Fecha del Turno:")
+    fecha_turno_label.grid(row=6, column=0, sticky="w")
+    fecha_turno_entry = tk.Entry(tab1)
+    fecha_turno_entry.grid(row=6, column=1)
+
+    hora_turno_label = tk.Label(tab1, text="Hora del Turno:")
+    hora_turno_label.grid(row=7, column=0, sticky="w")
+    hora_turno_entry = tk.Entry(tab1)
+    hora_turno_entry.grid(row=7, column=1)
+
+    agregar_button = tk.Button(tab1, text="Agregar Turno", command=agregar_turno)
+    agregar_button.grid(row=8, column=0, columnspan=2)
     #endregion
 
     #region Ventas
-    frameProducto_venta = ttk.Frame(tab2)
-    frameProducto_venta.pack(anchor="w", pady=5)
-
-    frameTalla_venta = ttk.Frame(tab2)
-    frameTalla_venta.pack(anchor="w", pady=5)
-
-    frameCantidad_venta = ttk.Frame(tab2)
-    frameCantidad_venta.pack(anchor="w", pady=5)
-
-    framePrecio_venta = ttk.Frame(tab2)
-    framePrecio_venta.pack(anchor="w", pady=5)
-
-    labelProducto_venta = tk.Label(frameProducto_venta, text="Producto: ")
-    labelProducto_venta.pack(side="left")
-
-    labelTalla_venta = tk.Label(frameTalla_venta, text="Talla: ")
-    labelTalla_venta.pack(side="left")
-
-    labelCantidad_venta = tk.Label(frameCantidad_venta, text="Cantidad: ")
-    labelCantidad_venta.pack(side="left")
-
-    labelPrecio_venta = tk.Label(framePrecio_venta, text="Precio: ")
-    labelPrecio_venta.pack(side="left")
-
-    entryTalla_venta = tk.Entry(frameTalla_venta)
-    entryTalla_venta.insert(tk.END, "Talle")
-    entryTalla_venta.config(state="readonly")
-    entryTalla_venta.pack(side="right")
-
-    comboboxProducto_venta = ttk.Combobox(frameProducto_venta, values=buscarNombres(), state="readonly")
-    comboboxProducto_venta.set("Productos")
-    comboboxProducto_venta.bind("<<ComboboxSelected>>", actualizar_venta)
-    comboboxProducto_venta.pack(side="right")
-
-    SpinboxCantidad_venta = tk.Spinbox(frameCantidad_venta, from_=1, to=100, state="readonly")
-    SpinboxCantidad_venta.bind("<<FocusOut>>", actualizar_venta)
-    SpinboxCantidad_venta.pack(side="right")
-
-    entryPrecio_venta = tk.Entry(framePrecio_venta, state="readonly")
-    entryPrecio_venta.pack(side="right")
-
-    botonVender_venta = tk.Button(tab2, text="Vender", command= lambda: venta(comboboxProducto_venta.get(), entryTalla_venta.get(), SpinboxCantidad_venta.get(), entryPrecio_venta.get()))
-    botonVender_venta.pack()
+    turnos_frame = tk.Frame(tab2)
+    turnos_frame.pack(expand=True, fill='both')
+    mostrar_turnos()
     #endregion
 
     #region Reembolsos
-    frameProducto_reembolso = ttk.Frame(tab3)
-    frameProducto_reembolso.pack(anchor="w", pady=5)
-
-    frameTalla_reembolso = ttk.Frame(tab3)
-    frameTalla_reembolso.pack(anchor="w", pady=5)
-
-    frameCantidad_reembolso = ttk.Frame(tab3)
-    frameCantidad_reembolso.pack(anchor="w", pady=5)
-
-    framePrecio_reembolso = ttk.Frame(tab3)
-    framePrecio_reembolso.pack(anchor="w", pady=5)
-
-    labelProducto_reembolso = tk.Label(frameProducto_reembolso, text="Producto: ")
-    labelProducto_reembolso.pack(side="left")
-
-    labelTalla_reembolso = tk.Label(frameTalla_reembolso, text="Talla: ")
-    labelTalla_reembolso.pack(side="left")
-
-    labelCantidad_reembolso = tk.Label(frameCantidad_reembolso, text="Cantidad: ")
-    labelCantidad_reembolso.pack(side="left")
-
-    labelPrecio_reembolso = tk.Label(framePrecio_reembolso, text="Precio: ")
-    labelPrecio_reembolso.pack(side="left")
-
-    entryTalla_reembolso = tk.Entry(frameTalla_reembolso)
-    entryTalla_reembolso.insert(tk.END, "Talle")
-    entryTalla_reembolso.config(state="readonly")
-    entryTalla_reembolso.pack(side="right")
-
-    comboboxProducto_reembolso = ttk.Combobox(frameProducto_reembolso, values=buscarNombres(), state="readonly")
-    comboboxProducto_reembolso.set("Productos")
-    comboboxProducto_reembolso.bind("<<ComboboxSelected>>", actualizar_reembolso)
-    comboboxProducto_reembolso.pack(side="right")
-
-    SpinboxCantidad_reembolso = tk.Spinbox(frameCantidad_reembolso, from_=1, to=100, state="readonly")
-    SpinboxCantidad_reembolso.bind("<<FocusOut>>", actualizar_reembolso)
-    SpinboxCantidad_reembolso.pack(side="right")
-
-    entryPrecio_reembolso = tk.Entry(framePrecio_reembolso, state="readonly")
-    entryPrecio_reembolso.pack(side="right")
-
-    botonVender_reembolso = tk.Button(tab3, text="Reembolsar", command= lambda: reembolso(comboboxProducto_reembolso.get(), entryTalla_reembolso.get(), SpinboxCantidad_reembolso.get(), entryPrecio_reembolso.get()))
-    botonVender_reembolso.pack()
+    turnos_frame_all = ttk.Frame(tab3)
+    turnos_frame_all.pack(anchor="w", pady=5)
+    mostrar_turnos_all()
     #endregion
 
     #region Productos
     frameProductoAgregar = ttk.Frame(tab4)
     frameProductoAgregar.pack(anchor="w", pady=5)
 
-    frameTallaProductoAgregar = ttk.Frame(tab4)
-    frameTallaProductoAgregar.pack(anchor="w", pady=5)
-
-    frameCantidadProductoAgregar = ttk.Frame(tab4)
-    frameCantidadProductoAgregar.pack(anchor="w", pady=5)
-
-    framePrecioProductoAgregar = ttk.Frame(tab4)
-    framePrecioProductoAgregar.pack(anchor="w", pady=5)
-
-    labelProductoProductoAgregar = tk.Label(frameProductoAgregar, text="Producto: ")
-    labelProductoProductoAgregar.pack(side="left")
-
-    labelTallaProductoAgregar = tk.Label(frameTallaProductoAgregar, text="Talla: ")
-    labelTallaProductoAgregar.pack(side="left")
-
-    labelCantidadProductoAgregar = tk.Label(frameCantidadProductoAgregar, text="Cantidad: ")
-    labelCantidadProductoAgregar.pack(side="left")
-
-    labelPrecioProductoAgregar = tk.Label(framePrecioProductoAgregar, text="Precio: ")
-    labelPrecioProductoAgregar.pack(side="left")
-
-    entryTallaProductoAgregar = tk.Entry(frameTallaProductoAgregar)
-    entryTallaProductoAgregar.pack(side="right")
-
-    entryProductoAgregar = ttk.Entry(frameProductoAgregar, state="normal")
-    entryProductoAgregar.pack(side="right")
-
-    SpinboxCantidadProductoAgregar = tk.Spinbox(frameCantidadProductoAgregar, from_=1, to=100)
-    SpinboxCantidadProductoAgregar.bind("<<FocusOut>>", actualizar_reembolso)
-    SpinboxCantidadProductoAgregar.pack(side="right")
-
-    entryPrecioProductoAgregar = tk.Entry(framePrecioProductoAgregar)
-    entryPrecioProductoAgregar.pack(side="right")
-
-    botonVenderProductoAgregar = tk.Button(tab4, text="Agregar", command= lambda: guardarNuevosProductos(entryProductoAgregar.get(), entryPrecioProductoAgregar.get(), entryTallaProductoAgregar.get(), SpinboxCantidadProductoAgregar.get(), 0, 0))
-    botonVenderProductoAgregar.pack()                                                                     
     #endregion
 
     #region AgregarStock
     frameProducto_Stock = ttk.Frame(tab5)
     frameProducto_Stock.pack(anchor="w", pady=5)
 
-    frameCantidad_Stock = ttk.Frame(tab5)
-    frameCantidad_Stock.pack(anchor="w", pady=5)
-
-    labelProducto_Stock = tk.Label(frameProducto_Stock, text="Producto: ")
-    labelProducto_Stock.pack(side="left")
-
-    labelCantidad_Stock = tk.Label(frameCantidad_Stock, text="Cantidad: ")
-    labelCantidad_Stock.pack(side="left")
-
-    comboboxProducto_Stock = ttk.Combobox(frameProducto_Stock, values=buscarNombresStock(), state="readonly")
-    comboboxProducto_Stock.set("Productos")
-    comboboxProducto_Stock.bind("<<ComboboxSelected>>")
-    comboboxProducto_Stock.pack(side="right")
-
-    SpinboxCantidad_Stock = tk.Spinbox(frameCantidad_Stock, from_=1, to=100, state="readonly")
-    SpinboxCantidad_Stock.bind("<<FocusOut>>")
-    SpinboxCantidad_Stock.pack(side="right")
-
-    botonAgregarStock = tk.Button(tab5, text="Agregar", command= lambda: agregarProducto(comboboxProducto_Stock.get(), SpinboxCantidad_Stock.get()))
-    botonAgregarStock.pack()
     #endregion
 
     notebook.pack(expand=True, fill='both')
@@ -334,3 +279,7 @@ def main():
 if __name__ == "__main__":
     main()
 #endregion
+
+
+
+

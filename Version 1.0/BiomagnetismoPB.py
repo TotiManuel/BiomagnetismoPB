@@ -34,9 +34,6 @@ def cargaDatos():
                 totalProductos.append(agregarProducto)
     return totalProductos
 
-def actualizar_pasaje():
-    pass
-
 def actualizar_venta(*args):
     for i in datosCargados:
         if comboboxProducto_venta.get() == i.getProducto():
@@ -174,7 +171,7 @@ def main():
     barraMenu.add_cascade(label="Archivo", menu = menuArchivo)
 
     menuTurnero.add_command(label="Buscar Paciente", command=lambda: faltaProgramar(), background="red")
-    menuTurnero.add_command(label="Turnero", command=lambda: faltaProgramar(), background="red")
+    menuTurnero.add_command(label="Turnero", command=lambda: turnero(), background="red")
     barraMenu.add_cascade(label="Turnero", menu = menuTurnero)
     
     root.config(menu=barraMenu)
@@ -193,9 +190,9 @@ def main():
     notebook.add(tab4, text="Agregar Producto")
     notebook.add(tab5, text="Agregar Stock")
 
-    imagen = PhotoImage(file="logo.png").subsample(2, 2)
-    label_imagen = tk.Label(tab1, image=imagen)
-    label_imagen.pack()
+    #imagen = PhotoImage(file="logo.png").subsample(2, 2)
+    #label_imagen = tk.Label(tab1, image=imagen)
+    #label_imagen.pack()
     #endregion
 
     #region Bienvenido
