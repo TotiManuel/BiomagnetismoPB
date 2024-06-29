@@ -1,2 +1,0 @@
-PRODUCTO, PRECIO, TALLA, STOCK, VENTAS, REEMBOLSO
-AnardirProducto, 10, AnadirTalla,100,0,0
